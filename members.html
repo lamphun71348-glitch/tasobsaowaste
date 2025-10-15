@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>ลงทะเบียนสมาชิก</title>
+  <link href="style.css" rel="stylesheet">
+</head>
+<body>
+  <header>
+    <h2>👥 ลงทะเบียนครัวเรือน</h2>
+  </header>
+  <div class="container">
+    <form id="memberForm">
+      <label for="name">ชื่อ-นามสกุล:</label>
+      <input type="text" id="name" required><br>
+
+      <label for="address">ที่อยู่:</label>
+      <input type="text" id="address" required><br>
+
+      <label for="village">หมู่บ้าน:</label>
+      <select id="village">
+        <option value="หมู่ 1">หมู่ 1</option>
+        <option value="หมู่ 2">หมู่ 2</option>
+        <option value="หมู่ 3">หมู่ 3</option>
+      </select><br>
+
+      <button type="submit">บันทึกข้อมูล</button>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById('memberForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const name = document.getElementById('name').value;
+      const address = document.getElementById('address').value;
+      const village = document.getElementById('village').value;
+
+      console.log({ name, address, village });
+      alert('บันทึกข้อมูลเรียบร้อยแล้ว');
+    });
+  </script>
+</body>
+</html>

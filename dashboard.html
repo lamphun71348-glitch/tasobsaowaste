@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard ข้อมูลขยะ</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="style.css" rel="stylesheet">
+</head>
+<body>
+  <header>
+    <h2>📊 ปริมาณขยะรายเดือน</h2>
+  </header>
+  <div class="container">
+    <canvas id="wasteChart"></canvas>
+  </div>
+
+  <script>
+    const ctx = document.getElementById('wasteChart').getContext('2d');
+    const wasteChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.'],
+        datasets: [
+          {
+            label: 'ขยะทั่วไป (กก.)',
+            data: [1200, 1100, 1300, 1250, 1400, 1350],
+            backgroundColor: 'rgba(255, 99, 132, 0.5)'
+          },
+          {
+            label: 'ขยะรีไซเคิล (กก.)',
+            data: [300, 350, 400, 380, 420, 410],
+            backgroundColor: 'rgba(54, 162, 235, 0.5)'
+          },
+          {
+            label: 'ขยะอินทรีย์ (กก.)',
+            data: [500, 480, 520, 510, 530, 525],
+            backgroundColor: 'rgba(75, 192, 192, 0.5)'
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: { beginAtZero: true }
+        }
+      }
+    });
+  </script>
+</body>
+</html>
