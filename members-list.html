@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>รายชื่อสมาชิกครัวเรือน</title>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+  <link href="style.css" rel="stylesheet">
+</head>
+<body>
+
+  <!-- หัวข้อ -->
+  <header style="text-align: center; background-color: #c5cae9; padding: 20px;">
+    <h2>📋 รายชื่อสมาชิกครัวเรือน</h2>
+    <p>ข้อมูลจากระบบลงทะเบียน</p>
+  </header>
+
+  <!-- ตารางรายชื่อ -->
+  <section style="max-width: 1000px; margin: auto; padding: 20px;">
+    <table id="membersTable" border="1" cellpadding="8" cellspacing="0" style="width: 100%; text-align: center;">
+      <thead style="background-color: #e8eaf6;">
+        <tr>
+          <th>ชื่อ-นามสกุล</th>
+          <th>เลขบัตรประชาชน</th>
+          <th>เบอร์โทร</th>
+          <th>หมู่บ้าน</th>
+          <th>จำนวนสมาชิก</th>
+          <th>ประเภทบ้าน</th>
+          <th>LINE OA</th>
+          <th>จัดการ</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <!-- เมนูนำทางด้านล่าง -->
+  <nav style="text-align: center; margin: 40px 0;">
+    <a href="index.html"><button>🏠 หน้าแรก</button></a>
+    <a href="members.html"><button>📝 ลงทะเบียนครัวเรือน</button></a>
+    <a href="members-list.html"><button style="background-color: #ddd;">📋 รายชื่อสมาชิก</button></a>
+    <a href="dashboard.html"><button>📊 ข้อมูลรายเดือน</button></a>
+    <a href="waste-budget.html"><button>💰 งบประมาณรายเดือน</button></a>
+  </nav>
+
+  <!-- สคริปต์ Firebase และแสดงข้อมูล -->
+  <script>
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    // โหลดข้อมูลสมาชิก
+    db.collection("members").get().then(snapshot => {
+      const tbody = document.querySelector("#membersTable tbody");
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${data.fullname}</td>
+          <td>${data.idcard}</td>
+          <td>${data.phone}</td>
+          <td>${data.village}</td>
+          <td>${data.members}</td>
+          <td>${data.houseType}</td>
+          <td>${data.lineSubscribe === "yes" ? "✅" : "❌"}</td>
+          <td>
+            <button onclick="editMember('${doc.id}')">✏️</button>
+            <button onclick="deleteMember('${doc.id}')">🗑️</button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    });
+
+    // ลบข้อมูลสมาชิก
+    function deleteMember(id) {
+      if (confirm("คุณแน่ใจว่าต้องการลบข้อมูลนี้?")) {
+        db.collection("members").doc(id).delete().then(() => {
+          alert("ลบข้อมูลเรียบร้อยแล้ว");
+          location.reload();
+        });
+      }
+    }
+
+    // แก้ไขข้อมูล (สามารถพัฒนาเพิ่มเติม)
+    function editMember(id) {
+      alert("ฟังก์ชันแก้ไขยังไม่เปิดใช้งาน");
+      // สามารถเปิด modal หรือ redirect ไปหน้าแก้ไขได้
+    }
+  </script>
+
+</body>
+</html>
