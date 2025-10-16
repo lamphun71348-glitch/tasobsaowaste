@@ -2,52 +2,133 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8">
-  <title>Dashboard ข้อมูลขยะ</title>
+  <title>ปริมาณขยะรายเดือน</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link href="style.css" rel="stylesheet">
 </head>
 <body>
-  <header>
+
+  <!-- เมนูนำทาง -->
+  <nav style="text-align: center; margin: 20px 0;">
+    <a href="index.html"><button>🏠 หน้าแรก</button></a>
+    <a href="dashboard.html"><button style="background-color: #ddd;">📊 ข้อมูลรายเดือน</button></a>
+    <a href="waste-summary.html"><button>📋 สรุปข้อมูลรายปี</button></a>
+    <a href="waste-budget.html"><button>💰 งบประมาณรายเดือน</button></a>
+  </nav>
+
+  <!-- หัวข้อ -->
+  <header style="text-align: center;">
     <h2>📊 ปริมาณขยะรายเดือน (ตัน)</h2>
     <p>ข้อมูลปีงบประมาณ 2566–2568</p>
   </header>
-  <div class="container">
+
+  <!-- กราฟ -->
+  <div style="max-width: 800px; margin: auto;">
     <canvas id="wasteChart"></canvas>
-<div style="text-align: center; margin-bottom: 30px;">
-    <button onclick="downloadCSV()">📥 ดาวน์โหลด CSV</button>
-    <button onclick="downloadPDF()">📄 ดาวน์โหลด PDF</button>
   </div>
-</section>
 
-<script>
-  function downloadCSV() {
-    const rows = Array.from(document.querySelectorAll("#wasteTable tr"));
-    const csv = rows.map(row =>
-      Array.from(row.children).map(cell => `"${cell.innerText}"`).join(",")
-    ).join("\n");
+  <!-- ตารางข้อมูลรายเดือน -->
+  <section class="monthly-table">
+    <h2 style="text-align: center;">📋 ตารางปริมาณขยะรายเดือน ปี 2566</h2>
+    <table id="monthlyTable" border="1" cellpadding="8" cellspacing="0" style="margin: 20px auto; width: 90%; text-align: center;">
+      <thead style="background-color: #e8f5e9;">
+        <tr>
+          <th>เดือน</th>
+          <th>ปริมาณขยะ (ตัน)</th>
+          <th>งบประมาณ (บาท)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>ต.ค.</td><td>49.55</td><td>91,297.27</td></tr>
+        <tr><td>พ.ย.</td><td>50.12</td><td>100,194.62</td></tr>
+        <tr><td>ธ.ค.</td><td>47.23</td><td>95,416.67</td></tr>
+        <tr><td>ม.ค.</td><td>48.99</td><td>99,747.32</td></tr>
+        <tr><td>ก.พ.</td><td>45.13</td><td>91,807.79</td></tr>
+        <tr><td>มี.ค.</td><td>52.07</td><td>105,948.49</td></tr>
+        <tr><td>เม.ย.</td><td>45.74</td><td>93,007.35</td></tr>
+        <tr><td>พ.ค.</td><td>50.34</td><td>102,359.93</td></tr>
+        <tr><td>มิ.ย.</td><td>52.17</td><td>106,263.61</td></tr>
+        <tr><td>ก.ค.</td><td>45.52</td><td>92,560.50</td></tr>
+        <tr><td>ส.ค.</td><td>54.98</td><td>111,885.34</td></tr>
+        <tr><td>ก.ย.</td><td>53.89</td><td>109,476.04</td></tr>
+      </tbody>
+    </table>
 
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = "waste_summary.csv";
-    link.click();
-  }
+    <div style="text-align: center; margin-top: 20px;">
+      <button onclick="downloadCSV()">📥 ดาวน์โหลด CSV</button>
+      <button onclick="downloadPDF()">📄 ดาวน์โหลด PDF</button>
+    </div>
+  </section>
 
-  function downloadPDF() {
-    const table = document.getElementById("wasteTable");
-    const win = window.open("", "", "width=800,height=600");
-    win.document.write("<html><head><title>สรุปข้อมูลขยะ</title></head><body>");
-    win.document.write("<h2>สรุปข้อมูลปริมาณขยะรายปี</h2>");
-    win.document.write(table.outerHTML);
-    win.document.write("</body></html>");
-    win.document.close();
-    win.print();
-  }
-</script>
-<nav style="text-align: center; margin: 20px 0;">
-  <a href="index.html"><button>🏠 หน้าแรก</button></a>
-  <a href="dashboard.html"><button style="background-color: #ddd;">📊 ข้อมูลรายเดือน</button></a>
-  <a href="waste-summary.html"><button>📋 สรุปข้อมูลรายปี</button></a>
-  <a href="waste-budget.html"><button>💰 งบประมาณรายเดือน</button></a>
-</nav>
+  <!-- สคริปต์กราฟและดาวน์โหลด -->
+  <script>
+    const ctx = document.getElementById('wasteChart').getContext('2d');
+    const wasteChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['ต.ค.', 'พ.ย.', 'ธ.ค.', 'ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.'],
+        datasets: [
+          {
+            label: 'ปี 2566',
+            data: [49.55, 50.12, 47.23, 48.99, 45.13, 52.07, 45.74, 50.34, 52.17, 45.52, 54.98, 53.89],
+            borderColor: 'rgba(76, 175, 80, 1)',
+            backgroundColor: 'rgba(76, 175, 80, 0.2)',
+            fill: true
+          },
+          {
+            label: 'ปี 2567',
+            data: [52.00, 48.50, 50.00, 51.20, 47.80, 53.10, 49.90, 52.30, 50.80, 54.00, 53.70, 51.60],
+            borderColor: 'rgba(33, 150, 243, 1)',
+            backgroundColor: 'rgba(33, 150, 243, 0.2)',
+            fill: true
+          },
+          {
+            label: 'ปี 2568',
+            data: [53.00, 50.20, 51.80, 52.10, 48.90, 54.30, 50.70, 53.40, 51.90, 55.10, 54.80, 52.60],
+            borderColor: 'rgba(244, 67, 54, 1)',
+            backgroundColor: 'rgba(244, 67, 54, 0.2)',
+            fill: true
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: false,
+            title: {
+              display: true,
+              text: 'ปริมาณขยะ (ตัน)'
+            }
+          }
+        }
+      }
+    });
 
+    function downloadCSV() {
+      const rows = Array.from(document.querySelectorAll("#monthlyTable tr"));
+      const csv = rows.map(row =>
+        Array.from(row.children).map(cell => `"${cell.innerText}"`).join(",")
+      ).join("\n");
+
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "monthly_waste_data.csv";
+      link.click();
+    }
+
+    function downloadPDF() {
+      const table = document.getElementById("monthlyTable");
+      const win = window.open("", "", "width=800,height=600");
+      win.document.write("<html><head><title>ตารางปริมาณขยะรายเดือน</title></head><body>");
+      win.document.write("<h2>ตารางปริมาณขยะรายเดือน ปี 2566</h2>");
+      win.document.write(table.outerHTML);
+      win.document.write("</body></html>");
+      win.document.close();
+      win.print();
+    }
+  </script>
+
+</body>
+</html>
