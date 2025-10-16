@@ -2,42 +2,67 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8">
-  <title>ลงทะเบียนสมาชิก</title>
+  <title>ลงทะเบียนครัวเรือน</title>
   <link href="style.css" rel="stylesheet">
 </head>
 <body>
-  <header>
-    <h2>👥 ลงทะเบียนครัวเรือน</h2>
+
+  <header style="text-align: center; background-color: #c8e6c9; padding: 20px;">
+    <h2>📋 ลงทะเบียนครัวเรือน</h2>
+    <p>กรุณากรอกข้อมูลให้ครบถ้วนเพื่อใช้ในระบบจัดการขยะ</p>
   </header>
-  <div class="container">
-    <form id="memberForm">
-      <label for="name">ชื่อ-นามสกุล:</label>
-      <input type="text" id="name" required><br>
 
-      <label for="address">ที่อยู่:</label>
-      <input type="text" id="address" required><br>
+  <form style="max-width: 600px; margin: auto; padding: 20px; background-color: #f1f8e9; border-radius: 8px;">
+    <label>ชื่อ-นามสกุล:</label><br>
+    <input type="text" name="fullname" required style="width: 100%;"><br><br>
 
-      <label for="village">หมู่บ้าน:</label>
-      <select id="village">
-        <option value="หมู่ 1">หมู่ 1</option>
-        <option value="หมู่ 2">หมู่ 2</option>
-        <option value="หมู่ 3">หมู่ 3</option>
-      </select><br>
+    <label>เลขบัตรประชาชน:</label><br>
+    <input type="text" name="idcard" maxlength="13" required style="width: 100%;"><br><br>
 
-      <button type="submit">บันทึกข้อมูล</button>
-    </form>
-  </div>
+    <label>เบอร์โทรศัพท์:</label><br>
+    <input type="tel" name="phone" required style="width: 100%;"><br><br>
 
-  <script>
-    document.getElementById('memberForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const name = document.getElementById('name').value;
-      const address = document.getElementById('address').value;
-      const village = document.getElementById('village').value;
+    <label>ที่อยู่:</label><br>
+    <textarea name="address" rows="3" required style="width: 100%;"></textarea><br><br>
 
-      console.log({ name, address, village });
-      alert('บันทึกข้อมูลเรียบร้อยแล้ว');
-    });
-  </script>
+    <label>หมู่บ้าน:</label><br>
+    <select name="village" required style="width: 100%;">
+      <option value="">-- กรุณาเลือก --</option>
+      <option value="บ้านต้นธง">บ้านต้นธง</option>
+      <option value="บ้านหนองหล่ม">บ้านหนองหล่ม</option>
+      <option value="บ้านสบสา">บ้านสบสา</option>
+      <!-- เพิ่มหมู่บ้านอื่น ๆ ตามจริง -->
+    </select><br><br>
+
+    <label>จำนวนสมาชิกในครัวเรือน:</label><br>
+    <input type="number" name="members" min="1" required style="width: 100%;"><br><br>
+
+    <label>ประเภทบ้าน:</label><br>
+    <select name="houseType" required style="width: 100%;">
+      <option value="">-- กรุณาเลือก --</option>
+      <option value="บ้านพักอาศัย">บ้านพักอาศัย</option>
+      <option value="หอพัก/อพาร์ตเมนต์">หอพัก/อพาร์ตเมนต์</option>
+      <option value="ร้านค้า/ธุรกิจ">ร้านค้า/ธุรกิจ</option>
+    </select><br><br>
+
+    <label>ต้องการรับข้อมูลผ่าน LINE OA:</label><br>
+    <select name="lineSubscribe" required style="width: 100%;">
+      <option value="yes">ต้องการ</option>
+      <option value="no">ไม่ต้องการ</option>
+    </select><br><br>
+
+    <div style="text-align: center;">
+      <button type="submit">✅ บันทึกข้อมูล</button>
+    </div>
+  </form>
+
+  <!-- เมนูนำทางด้านล่าง -->
+  <nav style="text-align: center; margin: 40px 0;">
+    <a href="index.html"><button>🏠 หน้าแรก</button></a>
+    <a href="dashboard.html"><button>📊 ข้อมูลรายเดือน</button></a>
+    <a href="waste-summary.html"><button>📋 สรุปข้อมูลรายปี</button></a>
+    <a href="waste-budget.html"><button>💰 งบประมาณรายเดือน</button></a>
+  </nav>
+
 </body>
 </html>
