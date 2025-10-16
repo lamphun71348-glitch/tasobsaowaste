@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>งบประมาณรายเดือน</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="style.css" rel="stylesheet">
+</head>
+<body>
+
+  <!-- หัวข้อ -->
+  <header style="text-align: center;">
+    <h2>💰 งบประมาณจัดการขยะรายเดือน</h2>
+    <p>ข้อมูลปีงบประมาณ 2566–2568</p>
+  </header>
+
+  <!-- กราฟ -->
+  <div style="max-width: 800px; margin: auto;">
+    <canvas id="budgetChart"></canvas>
+  </div>
+
+  <!-- ตารางงบประมาณรายเดือน ปี 2568 -->
+  <section class="monthly-budget">
+    <h2 style="text-align: center;">📋 ตารางงบประมาณรายเดือน ปี 2568</h2>
+    <table id="budgetTable" border="1" cellpadding="8" cellspacing="0" style="margin: 20px auto; width: 90%; text-align: center;">
+      <thead style="background-color: #fff3e0;">
+        <tr>
+          <th>เดือน</th>
+          <th>งบประมาณ (บาท)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>ต.ค.</td><td>116,520.97</td></tr>
+        <tr><td>พ.ย.</td><td>110,177.48</td></tr>
+        <tr><td>ธ.ค.</td><td>111,678.00</td></tr>
+        <tr><td>ม.ค.</td><td>111,436.50</td></tr>
+        <tr><td>ก.พ.</td><td>101,735.50</td></tr>
+        <tr><td>มี.ค.</td><td>101,556.00</td></tr>
+        <tr><td>เม.ย.</td><td>122,965.50</td></tr>
+        <tr><td>พ.ค.</td><td>126,273.00</td></tr>
+        <tr><td>มิ.ย.</td><td>116,697.00</td></tr>
+        <tr><td>ก.ค.</td><td>133,990.50</td></tr>
+        <tr><td>ส.ค.</td><td>127,333.00</td></tr>
+        <tr><td>ก.ย.</td><td>132,247.50</td></tr>
+      </tbody>
+    </table>
+
+    <div style="text-align: center; margin-top: 20px;">
+      <button onclick="downloadCSV()">📥 ดาวน์โหลด CSV</button>
+      <button onclick="downloadPDF()">📄 ดาวน์โหลด PDF</button>
+      <button onclick="downloadExcel()">📊 ดาวน์โหลด Excel</button>
+    </div>
+  </section>
+
+  <!-- เมนูนำทางด้านล่าง -->
+  <nav style="text-align: center; margin: 40px 0;">
+    <a href="index.html"><button>🏠 หน้าแรก</button></a>
+    <a href="dashboard.html"><button>📊 ข้อมูลรายเดือน</button></a>
+    <a href="waste-summary.html"><button>📋 สรุปข้อมูลรายปี</button></a>
+    <a href="waste-budget.html"><button style="background-color: #ddd;">💰 งบประมาณรายเดือน</button></a>
+  </nav>
+
+  <!-- สคริปต์กราฟและดาวน์โหลด -->
+  <script>
+    const ctx = document.getElementById('budgetChart').getContext('2d');
+    const budgetChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['ต.ค.', 'พ.ย.', 'ธ.ค.', 'ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.'],
+        datasets: [
+          {
+            label: 'ปี 2566',
+            data: [91297.27, 100194.62, 95416.67, 99747.32, 91807.79, 105948.49, 93007.35, 102359.93, 106263.61, 92560.50, 111885.34, 109476.04],
+            backgroundColor: 'rgba(76, 175, 80, 0.6)'
+          },
+          {
+            label: 'ปี 2567',
+            data: [102000, 98000, 101500, 103200, 96000, 106300, 99500, 104600, 102800, 107500, 106900, 103800],
+            backgroundColor: 'rgba(33, 150, 243, 0.6)'
+          },
+          {
+            label: 'ปี 2568',
+            data: [116520.97, 110177.48, 111678.00, 111436.50, 101735.50, 101556.00, 122965.50, 126273.00, 116697.00, 133990.50, 127333.00, 132247.50],
+            backgroundColor: 'rgba(244, 67, 54, 0.6)'
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: false,
+            title: {
+              display: true,
+              text: 'งบประมาณ (บาท)'
+            }
+          }
+        }
+      }
+    });
+
+    function downloadCSV() {
+      const rows = Array.from(document.querySelectorAll("#budgetTable tr"));
+      const csv = rows.map(row =>
+        Array.from(row.children).map(cell => `"${cell.innerText}"`).join(",")
+      ).join("\n");
+
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "monthly_budget_2568.csv";
+      link.click();
+    }
+
+    function downloadPDF() {
+      const table = document.getElementById("budgetTable");
+      const win = window.open("", "", "width=800,height=600");
+      win.document.write("<html><head><title>ตารางงบประมาณรายเดือน</title></head><body>");
+      win.document.write("<h2>ตารางงบประมาณรายเดือน ปี 2568</h2>");
+      win.document.write(table.outerHTML);
+      win.document.write("</body></html>");
+      win.document.close();
+      win.print();
+    }
+
+    function downloadExcel() {
+      const table = document.getElementById("budgetTable");
+      let tableHTML = table.outerHTML.replace(/<tfoot[\s\S.]*?<\/tfoot>/g, "");
+
+      const html = `
+        <html xmlns:o="urn:schemas-microsoft-com:office:office"
+              xmlns:x="urn:schemas-microsoft-com:office:excel"
+              xmlns="http://www.w3.org/TR/REC-html40">
+        <head>
+          <!--[if gte mso 9]>
+          <xml>
+            <x:ExcelWorkbook>
+              <x:ExcelWorksheets>
+                <x:ExcelWorksheet>
+                  <x:Name>งบประมาณรายเดือน</x:Name>
+                  <x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions>
+                </x:ExcelWorksheet>
+              </x:ExcelWorksheets>
+            </x:ExcelWorkbook>
+          </xml>
+          <![endif]-->
+        </head>
+        <body>
+          ${tableHTML}
+        </body>
+        </html>
+      `;
+
+      const blob = new Blob([html], { type: "application/vnd.ms-excel" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "monthly_budget_2568.xls";
+      link.click();
+    }
+  </script>
+
+</body>
+</html>
