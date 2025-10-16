@@ -1,45 +1,62 @@
+<section class="summary">
+  <h2 style="text-align: center;">📋 สรุปข้อมูลปริมาณขยะรายปี</h2>
+  <p style="text-align: center; font-style: italic; color: #555;">
+    ข้อมูลนี้จัดทำขึ้นเพื่อการวางแผนงบประมาณและการจัดการขยะในชุมชนเทศบาลตำบลทาสบเส้า
+  </p>
 
-<table id="wasteTable" border="1" cellpadding="8" cellspacing="0" style="margin: 20px auto; width: 90%; text-align: center;">
-  <thead style="background-color: #e0f7fa;">
-    <tr>
-      <th>ปีงบประมาณ</th>
-      <th>ปริมาณขยะรวม (ตัน)</th>
-      <th>ค่าเฉลี่ยต่อเดือน (ตัน)</th>
-      <th>งบประมาณรวม (บาท)</th>
-      <th>หมายเหตุ</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>2566</td>
-      <td>594.615</td>
-      <td>49.55</td>
-      <td>1,200,671.83</td>
-      <td>ค่าธรรมเนียม 2,033.17 บาท</td>
-    </tr>
-    <tr>
-      <td>2567</td>
-      <td>656.520</td>
-      <td>54.71</td>
-      <td>1,296,674.35</td>
-      <td>ค่าธรรมเนียม 2,033.17 บาท</td>
-    </tr>
-    <tr>
-      <td>2568</td>
-      <td>660.265</td>
-      <td>55.02</td>
-      <td>1,350,614.95</td>
-      <td>ค่าธรรมเนียม 2,100 บาท</td>
-    </tr>
-  </tbody>
-</table>
-<div style="text-align: center; margin-top: 20px;">
-  <button onclick="downloadCSV()">📥 ดาวน์โหลด CSV</button>
-  <button onclick="downloadPDF()">📄 ดาวน์โหลด PDF</button>
-</div>
+  <table id="wasteTable" border="1" cellpadding="8" cellspacing="0" style="margin: 20px auto; width: 90%; text-align: center;">
+    <thead style="background-color: #e0f7fa;">
+      <tr>
+        <th>ปีงบประมาณ</th>
+        <th>ปริมาณขยะรวม (ตัน)</th>
+        <th>ค่าเฉลี่ยต่อเดือน (ตัน)</th>
+        <th>งบประมาณรวม (บาท)</th>
+        <th>หมายเหตุ</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>2566</td>
+        <td>594.615</td>
+        <td>49.55</td>
+        <td>1,200,671.83</td>
+        <td>ค่าธรรมเนียม 2,033.17 บาท</td>
+      </tr>
+      <tr>
+        <td>2567</td>
+        <td>656.520</td>
+        <td>54.71</td>
+        <td>1,296,674.35</td>
+        <td>ค่าธรรมเนียม 2,033.17 บาท</td>
+      </tr>
+      <tr>
+        <td>2568</td>
+        <td>660.265</td>
+        <td>55.02</td>
+        <td>1,350,614.95</td>
+        <td>ค่าธรรมเนียม 2,100 บาท</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="text-align: center; margin-top: 20px;">
+    <button onclick="downloadCSV()">📥 ดาวน์โหลด CSV</button>
+    <button onclick="downloadPDF()">📄 ดาวน์โหลด PDF</button>
+    <a href="index.html"><button>🔙 กลับหน้าแรก</button></a>
+  </div>
+</section>
+
+<section class="chart" style="margin-top: 50px;">
+  <h2 style="text-align: center;">📊 เปรียบเทียบงบประมาณรวมรายปี</h2>
+  <div style="max-width: 600px; margin: auto;">
+    <canvas id="budgetChart"></canvas>
+  </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
   function downloadCSV() {
-    const rows = Array.from(document.querySelectorAll("table tr"));
+    const rows = Array.from(document.querySelectorAll("#wasteTable tr"));
     const csv = rows.map(row =>
       Array.from(row.children).map(cell => `"${cell.innerText}"`).join(",")
     ).join("\n");
@@ -52,7 +69,7 @@
   }
 
   function downloadPDF() {
-    const table = document.querySelector("table");
+    const table = document.getElementById("wasteTable");
     const win = window.open("", "", "width=800,height=600");
     win.document.write("<html><head><title>สรุปข้อมูลขยะ</title></head><body>");
     win.document.write("<h2>สรุปข้อมูลปริมาณขยะรายปี</h2>");
@@ -61,5 +78,29 @@
     win.document.close();
     win.print();
   }
-</script>
 
+  const ctx = document.getElementById('budgetChart').getContext('2d');
+  const budgetChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['2566', '2567', '2568'],
+      datasets: [{
+        label: 'งบประมาณรวม (บาท)',
+        data: [1200671.83, 1296674.35, 1350614.95],
+        backgroundColor: ['#4caf50', '#2196f3', '#f44336']
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          beginAtZero: false,
+          title: {
+            display: true,
+            text: 'จำนวนเงิน (บาท)'
+          }
+        }
+      }
+    }
+  });
+</script>
