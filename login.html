@@ -19,13 +19,21 @@
     <input type="email" id="email" required style="width: 100%;"><br><br>
     <label>รหัสผ่าน:</label><br>
     <input type="password" id="password" required style="width: 100%;"><br><br>
-    <button type="button" onclick="login()">✅ เข้าสู่ระบบ</button>
+    <button type="button" onclick="login()" style="width: 100%; padding: 10px;">✅ เข้าสู่ระบบ</button>
   </form>
+
+  <!-- ปุ่มเข้าสู่ระบบด้วย Google -->
+  <div style="text-align: center; margin-top: 20px;">
+    <p>หรือ</p>
+    <button onclick="loginWithGoogle()" style="padding: 10px 20px; font-size: 16px; background-color: #4285F4; color: white; border: none; border-radius: 4px;">
+      🔑 เข้าสู่ระบบด้วย Google
+    </button>
+  </div>
 
   <script>
     const firebaseConfig = {
       apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_PROJECT.firebaseapp.com",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
       projectId: "YOUR_PROJECT_ID",
       appId: "YOUR_APP_ID"
     };
@@ -38,6 +46,13 @@
       auth.signInWithEmailAndPassword(email, password)
         .then(() => window.location.href = "members-list.html")
         .catch(err => alert("เข้าสู่ระบบไม่สำเร็จ: " + err.message));
+    }
+
+    function loginWithGoogle() {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      auth.signInWithPopup(provider)
+        .then(() => window.location.href = "members-list.html")
+        .catch(err => alert("เข้าสู่ระบบด้วย Google ไม่สำเร็จ: " + err.message));
     }
   </script>
 
