@@ -1,0 +1,117 @@
+<a href="edit-member.html?id=abc123"><button>✏️</button></a>
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>แก้ไขข้อมูลสมาชิก</title>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+  <link href="style.css" rel="stylesheet">
+</head>
+<body>
+
+  <header style="text-align: center; background-color: #ffe0b2; padding: 20px;">
+    <h2>✏️ แก้ไขข้อมูลสมาชิก</h2>
+    <p>เฉพาะเจ้าหน้าที่ที่เข้าสู่ระบบเท่านั้น</p>
+  </header>
+
+  <form id="editForm" style="max-width: 600px; margin: auto; padding: 20px; background-color: #fff8e1; border-radius: 8px;">
+    <label>ชื่อ-นามสกุล:</label><br>
+    <input type="text" name="fullname" required style="width: 100%;"><br><br>
+
+    <label>เลขบัตรประชาชน:</label><br>
+    <input type="text" name="idcard" maxlength="13" required style="width: 100%;"><br><br>
+
+    <label>เบอร์โทรศัพท์:</label><br>
+    <input type="tel" name="phone" required style="width: 100%;"><br><br>
+
+    <label>ที่อยู่:</label><br>
+    <textarea name="address" rows="3" required style="width: 100%;"></textarea><br><br>
+
+    <label>หมู่บ้าน:</label><br>
+    <select name="village" required style="width: 100%;">
+      <option value="บ้านต้นธง">บ้านต้นธง</option>
+      <option value="บ้านหนองหล่ม">บ้านหนองหล่ม</option>
+      <option value="บ้านสบสา">บ้านสบสา</option>
+    </select><br><br>
+
+    <label>จำนวนสมาชิกในครัวเรือน:</label><br>
+    <input type="number" name="members" min="1" required style="width: 100%;"><br><br>
+
+    <label>ประเภทบ้าน:</label><br>
+    <select name="houseType" required style="width: 100%;">
+      <option value="บ้านพักอาศัย">บ้านพักอาศัย</option>
+      <option value="หอพัก/อพาร์ตเมนต์">หอพัก/อพาร์ตเมนต์</option>
+      <option value="ร้านค้า/ธุรกิจ">ร้านค้า/ธุรกิจ</option>
+    </select><br><br>
+
+    <label>ต้องการรับข้อมูลผ่าน LINE OA:</label><br>
+    <select name="lineSubscribe" required style="width: 100%;">
+      <option value="yes">ต้องการ</option>
+      <option value="no">ไม่ต้องการ</option>
+    </select><br><br>
+
+    <div style="text-align: center;">
+      <button type="submit">💾 บันทึกการแก้ไข</button>
+    </div>
+  </form>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      appId: "YOUR_APP_ID"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const auth = firebase.auth();
+
+    // ตรวจสอบการล็อกอิน
+    auth.onAuthStateChanged(user => {
+      if (!user) {
+        alert("กรุณาเข้าสู่ระบบก่อนใช้งานหน้านี้");
+        window.location.href = "login.html";
+      }
+    });
+
+    // รับ ID จาก URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const memberId = urlParams.get("id");
+
+    // โหลดข้อมูลสมาชิก
+    db.collection("members").doc(memberId).get().then(doc => {
+      if (!doc.exists) {
+        alert("ไม่พบข้อมูลสมาชิก");
+        return;
+      }
+      const data = doc.data();
+      for (const key in data) {
+        const field = document.querySelector(`[name='${key}']`);
+        if (field) field.value = data[key];
+      }
+    });
+
+    // บันทึกการแก้ไข
+    document.getElementById("editForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+      const updatedData = {
+        fullname: this.fullname.value,
+        idcard: this.idcard.value,
+        phone: this.phone.value,
+        address: this.address.value,
+        village: this.village.value,
+        members: this.members.value,
+        houseType: this.houseType.value,
+        lineSubscribe: this.lineSubscribe.value
+      };
+      await db.collection("members").doc(memberId).update(updatedData);
+      alert("บันทึกข้อมูลเรียบร้อยแล้ว");
+      window.location.href = "members-list.html";
+    });
+  </script>
+
+</body>
+</html>
